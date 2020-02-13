@@ -182,25 +182,23 @@ trait ElasticSearchQueryTrait
     {
         $query = $this->andWhere ? $this->query : $this->initQuery();
         if (!empty($value)) {
-            $query['body']['query']['bool']['should'][] = [
-                'query_string' => [
-                    "fuzziness" => 0,
-                    "phrase_slop" => 0,
-                    "default_operator" => "OR",
-                    "minimum_should_match" => "50%",
-                    "fields" => [
-                        $field
-                    ],
-                    'query' => '("' . $value . '")'
-                ]
-            ];
+            if (is_string($value)) {
+                $tmp = [
+                    'query' => $value,
+                    'operator' => 'and',
+                    'minimum_should_match' => '65%',
+                ];
+            } else {
+                $tmp = [
+                    'query' => $value['value'],
+                    'operator' => 'and',
+                    'analyzer' => $value['analyzer'],
+                    'minimum_should_match' => '65%',
+                ];
+            }
             $query['body']['query']['bool']['must'][] = [
-                "wildcard" => [
-                    $field => [
-                        "value" => "*" . $value . "*",
-                        "boost" => 1.0,
-                        "rewrite" => "constant_score"
-                    ]
+                'match' => [
+                    $field => $tmp
                 ]
             ];
         }
