@@ -135,6 +135,14 @@ trait ElasticSearchQueryTrait
         $query = $this->andWhere ? $this->query : $this->initQuery();
         if ($condition == '<>') {
             $query['body']['query']['bool']['must_not'][] = ['term' => [$field => $value]];
+        } else if ($condition == '>') {
+            $query['body']['query']['bool']['must'][] = ['range' => [$field => ['gt' => $value]]];
+        } else if ($condition == '>=') {
+            $query['body']['query']['bool']['must'][] = ['range' => [$field => ['gte' => $value]]];
+        } else if ($condition == '<') {
+            $query['body']['query']['bool']['must'][] = ['range' => [$field => ['lt' => $value]]];
+        } else if ($condition == '<=') {
+            $query['body']['query']['bool']['must'][] = ['range' => [$field => ['lte' => $value]]];
         } else {
             $query['body']['query']['bool']['must'][] = ['match' => [$field => $value]];
         }
@@ -283,6 +291,7 @@ trait ElasticSearchQueryTrait
         }
         return $isTextField;
     }
+
     /**
      * @param $order
      * @return array
