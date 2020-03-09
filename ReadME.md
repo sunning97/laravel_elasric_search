@@ -1,14 +1,13 @@
-### Elastic Search For Yii 2
+### Elastic Search For Laravel
 
 ***This lib compatible with Elastic >= 7.0.1***
 
 For any problem please contact me: giangnguyen.neko.130@gmail.com
 
+This library is incomplete and it may have many errors, please make it become complete. Thank you
 
 ### Usage
 Just create a new class extend from Kuroneko\Yii2ElasticSearch\Abstracts\BaseElasticSearchAbstract
-
-**Recommendation**: Class should implement interface for strict code
 
 ```php
 use Kuroneko\Yii2ElasticSearch\Abstracts\BaseElasticSearchAbstract;
@@ -21,15 +20,15 @@ class CatElasticSearch extends BaseElasticSearchAbstract
      */
     public function __construct()
     {
-        $timeout = '1s';
-        $server = env('ELASTIC_SERVER');
+        $timeout = '1s'; //connection timeout
+        $server = env('ELASTIC_SERVER'); //server information
         parent::__construct($server, $timeout);
     }
 
     /**
      * @inheritDoc
      */
-    public function index(): string
+    public function index(): string //define your index name here
     {
         return 'cat';
     }
@@ -39,7 +38,7 @@ class CatElasticSearch extends BaseElasticSearchAbstract
      */
     public function settings()
     {
-        // define your setting here
+        // define your setting for index here
         return [
             'analysis' => [
                 'analyzer' => [
@@ -79,8 +78,9 @@ class CatElasticSearch extends BaseElasticSearchAbstract
 }
 ```
 
-### insert document
-***Note** The data must compatible with your mapping define in class
+### Insert document
+**Note:** The data must compatible with your mapping defined in class
+
 ```php
 $data = [
     'id' => 1,
@@ -91,7 +91,7 @@ $elastic = new CatElasticSearch();
 $elastic->insert($data);
 ```
 
-### delete document
+### Delete document
 ```php
 $elastic = new CatElasticSearch();
 $elastic->find()
